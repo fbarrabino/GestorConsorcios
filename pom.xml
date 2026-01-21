@@ -43,11 +43,11 @@
 
 		<!-- Lombok para reducir código repetitivo (Getters, Setters, etc.) -->
 		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.34</version>
-			<optional>true</optional>
-		</dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <version>1.18.30</version>
+    <scope>provided</scope>
+</dependency>
 
 		<!-- Testing (incluido por defecto en buenas prácticas) -->
 		<dependency>

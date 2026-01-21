@@ -5,28 +5,160 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestor de Consorcios</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f4f7f6; }
-        .container { max-width: 900px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { color: #333; text-align: center; margin-bottom: 25px; }
-        
-        /* Estilos del Formulario */
-        form { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; padding: 20px; background-color: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; }
-        .full-width { grid-column: span 2; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; color: #555; }
-        input[type="text"], input[type="number"], input[type="date"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .checkbox-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
-        input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
-        
-        button { grid-column: span 2; padding: 12px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background 0.3s; }
-        button:hover { background-color: #218838; }
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --input-bg: #2c2c2c;
+            --border-color: #333;
+            --accent-primary: #bb86fc;
+            --accent-secondary: #03dac6;
+            --danger: #cf6679;
+            --success: #03dac6;
+        }
 
-        /* Estilos de la Tabla */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #007bff; color: white; font-weight: 600; }
-        tr:hover { background-color: #f1f1f1; }
-        .tipo-extra { color: #d9534f; font-weight: bold; }
-        .tipo-comun { color: #5bc0de; font-weight: bold; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: 300;
+            margin-bottom: 30px;
+            color: var(--accent-primary);
+        }
+
+        /* Formulario */
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background-color: #252525;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .full-width { grid-column: span 2; }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        input[type="text"], input[type="number"], input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent-secondary);
+            cursor: pointer;
+        }
+
+        /* Botones */
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: opacity 0.2s;
+        }
+
+        button:hover { opacity: 0.9; }
+
+        .btn-primary { background-color: var(--accent-secondary); color: #000; }
+        .btn-update { background-color: var(--accent-primary); color: #000; }
+        .btn-danger { background-color: var(--danger); color: #000; }
+        .btn-edit { background-color: transparent; border: 1px solid var(--text-secondary); color: var(--text-primary); padding: 6px 12px; font-size: 0.9rem; }
+        .btn-edit:hover { background-color: rgba(255,255,255,0.1); }
+
+        /* Toolbar */
+        .toolbar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+            gap: 10px;
+            min-height: 45px;
+        }
+
+        .selection-controls { display: none; gap: 10px; }
+        .selection-mode-active .selection-controls { display: flex; }
+        .selection-mode-active .btn-init-select { display: none; }
+
+        /* Tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #252525;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        tr:hover { background-color: #2c2c2c; }
+
+        .col-checkbox { display: none; width: 40px; }
+        .selection-mode-active .col-checkbox { display: table-cell; }
+
+        .tag {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        .tag-extra { color: var(--danger); background: rgba(207, 102, 121, 0.1); }
+        .tag-comun { color: var(--accent-secondary); background: rgba(3, 218, 198, 0.1); }
     </style>
 </head>
 <body>
@@ -34,54 +166,92 @@
 <div class="container">
     <h1>Gestor de Consorcios</h1>
 
-    <!-- Formulario de Carga -->
     <form id="gastoForm">
         <div class="full-width">
-            <label for="descripcion">Descripción</label>
-            <input type="text" id="descripcion" placeholder="Ej: Reparación de ascensor" required>
+            <label>Descripción</label>
+            <input type="text" id="descripcion" required>
         </div>
         <div>
-            <label for="monto">Monto</label>
-            <input type="number" id="monto" step="0.01" placeholder="0.00" required>
+            <label>Monto</label>
+            <input type="number" id="monto" step="0.01" required>
         </div>
         <div>
-            <label for="fechaGasto">Fecha</label>
+            <label>Fecha</label>
             <input type="date" id="fechaGasto" required>
         </div>
-        <div class="full-width checkbox-container">
+        <div class="full-width checkbox-wrapper">
             <input type="checkbox" id="esExtraordinario">
-            <label for="esExtraordinario">Es Gasto Extraordinario</label>
+            <label for="esExtraordinario" style="margin:0; cursor:pointer;">Es Gasto Extraordinario</label>
         </div>
-        <button type="submit">Cargar Gasto</button>
+        <button type="submit" id="btnSubmit" class="full-width btn-primary">Cargar Gasto</button>
     </form>
 
-    <!-- Tabla de Listado -->
-    <table>
+    <div class="toolbar">
+        <button onclick="activarSeleccion()" class="btn-danger btn-init-select">🗑️ Seleccionar para Borrar</button>
+        <div class="selection-controls">
+            <button onclick="borrarSeleccionados()" class="btn-danger">Confirmar Borrado</button>
+            <button onclick="cancelarSeleccion()" style="background:#555; color:white;">Cancelar</button>
+        </div>
+    </div>
+
+    <table id="tablaGastos">
         <thead>
             <tr>
+                <th class="col-checkbox"><input type="checkbox" id="checkAll" onclick="toggleAll()"></th>
                 <th>ID</th>
                 <th>Descripción</th>
                 <th>Monto</th>
                 <th>Fecha</th>
                 <th>Tipo</th>
+                <th>Modificado</th>
+                <th>Acciones</th>
             </tr>
         </thead>
-        <tbody id="tablaGastosBody">
-            <!-- Las filas se insertarán aquí con JS -->
-        </tbody>
+        <tbody id="tbodyGastos"></tbody>
     </table>
 </div>
 
 <script>
     const API_URL = '/api/gastos';
+    let editandoId = null;
 
-    // Cargar datos al iniciar la página
-    document.addEventListener('DOMContentLoaded', cargarGastos);
+    document.addEventListener('DOMContentLoaded', listarGastos);
 
-    // Manejar el envío del formulario
+    async function listarGastos() {
+        try {
+            const res = await fetch(API_URL);
+            const data = await res.json();
+            renderTabla(data);
+        } catch (e) { console.error(e); }
+    }
+
+    function renderTabla(gastos) {
+        const tbody = document.getElementById('tbodyGastos');
+        tbody.innerHTML = '';
+        gastos.forEach(g => {
+            const modificado = g.fechaModificacion ? new Date(g.fechaModificacion).toLocaleString() : '-';
+            const tipoClass = g.esExtraordinario ? 'tag-extra' : 'tag-comun';
+            const tipoText = g.esExtraordinario ? 'Extraordinario' : 'Común';
+            
+            tbody.innerHTML += `
+                <tr>
+                    <td class="col-checkbox"><input type="checkbox" class="sub-check" value="${g.id}"></td>
+                    <td>${g.id}</td>
+                    <td>${g.descripcion}</td>
+                    <td>$${g.monto.toFixed(2)}</td>
+                    <td>${g.fechaGasto}</td>
+                    <td><span class="tag ${tipoClass}">${tipoText}</span></td>
+                    <td style="font-size:0.85rem; color:#888;">${modificado}</td>
+                    <td>
+                        <button onclick='cargarEdicion(${JSON.stringify(g)})' class="btn-edit">✏️ Editar</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
     document.getElementById('gastoForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-
         const gasto = {
             descripcion: document.getElementById('descripcion').value,
             monto: parseFloat(document.getElementById('monto').value),
@@ -89,40 +259,78 @@
             esExtraordinario: document.getElementById('esExtraordinario').checked
         };
 
-        await fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(gasto)
-        });
+        const method = editandoId ? 'PUT' : 'POST';
+        const url = editandoId ? `${API_URL}/${editandoId}` : API_URL;
 
-        document.getElementById('gastoForm').reset();
-        cargarGastos(); // Recargar la tabla
+        try {
+            const res = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(gasto)
+            });
+            
+            if(res.ok) {
+                resetForm();
+                listarGastos();
+            } else {
+                alert("Error al guardar");
+            }
+        } catch (err) { console.error(err); }
     });
 
-    // Función para obtener y renderizar la lista
-    async function cargarGastos() {
-        const response = await fetch(API_URL);
-        const gastos = await response.json();
-        const tbody = document.getElementById('tablaGastosBody');
-        tbody.innerHTML = '';
+    function cargarEdicion(g) {
+        editandoId = g.id;
+        document.getElementById('descripcion').value = g.descripcion;
+        document.getElementById('monto').value = g.monto;
+        document.getElementById('fechaGasto').value = g.fechaGasto;
+        document.getElementById('esExtraordinario').checked = g.esExtraordinario;
+        
+        const btn = document.getElementById('btnSubmit');
+        btn.textContent = 'Actualizar Gasto';
+        btn.className = 'full-width btn-update';
+        window.scrollTo(0,0);
+    }
 
-        gastos.forEach(g => {
-            const tipoClass = g.esExtraordinario ? 'tipo-extra' : 'tipo-comun';
-            const tipoTexto = g.esExtraordinario ? 'Extraordinario' : 'Común';
-            
-            const row = `
-                <tr>
-                    <td>${g.id}</td>
-                    <td>${g.descripcion}</td>
-                    <td>$${g.monto.toFixed(2)}</td>
-                    <td>${g.fechaGasto}</td>
-                    <td class="${tipoClass}">${tipoTexto}</td>
-                </tr>
-            `;
-            tbody.innerHTML += row;
-        });
+    function resetForm() {
+        editandoId = null;
+        document.getElementById('gastoForm').reset();
+        const btn = document.getElementById('btnSubmit');
+        btn.textContent = 'Cargar Gasto';
+        btn.className = 'full-width btn-primary';
+    }
+
+    // Lógica de Selección
+    function activarSeleccion() {
+        document.querySelector('.container').classList.add('selection-mode-active');
+    }
+
+    function cancelarSeleccion() {
+        document.querySelector('.container').classList.remove('selection-mode-active');
+        document.querySelectorAll('.sub-check').forEach(c => c.checked = false);
+        document.getElementById('checkAll').checked = false;
+    }
+
+    function toggleAll() {
+        const val = document.getElementById('checkAll').checked;
+        document.querySelectorAll('.sub-check').forEach(c => c.checked = val);
+    }
+
+    async function borrarSeleccionados() {
+        const ids = Array.from(document.querySelectorAll('.sub-check:checked')).map(c => parseInt(c.value));
+        if(ids.length === 0) return alert("Seleccione al menos uno");
+        
+        if(!confirm(`¿Borrar ${ids.length} elementos?`)) return;
+
+        try {
+            await fetch(`${API_URL}/batch`, {
+                method: 'DELETE',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(ids)
+            });
+            cancelarSeleccion();
+            listarGastos();
+        } catch(e) { console.error(e); }
     }
 </script>
-
 </body>
 </html>
