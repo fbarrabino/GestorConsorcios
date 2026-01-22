@@ -6,6 +6,25 @@
     <title>Gestor de Consorcios</title>
     <style>
         :root {
+            /* Modo Claro (Base) */
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --input-bg: #ffffff;
+            --border-color: #cccccc;
+            --accent-primary: #6200ee;
+            --accent-secondary: #03dac6;
+            --danger: #b00020;
+            --success: #03dac6;
+            --form-bg: #f8f9fa;
+            --th-bg: #e9ecef;
+            --hover-bg: #f1f3f5;
+            --edit-hover: rgba(0,0,0,0.05);
+            --btn-text-on-primary: #ffffff;
+        }
+
+        body.dark-mode {
             --bg-color: #121212;
             --card-bg: #1e1e1e;
             --text-primary: #e0e0e0;
@@ -16,6 +35,11 @@
             --accent-secondary: #03dac6;
             --danger: #cf6679;
             --success: #03dac6;
+            --form-bg: #252525;
+            --th-bg: #252525;
+            --hover-bg: #2c2c2c;
+            --edit-hover: rgba(255,255,255,0.1);
+            --btn-text-on-primary: #000000;
         }
 
         body {
@@ -47,7 +71,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
-            background-color: #252525;
+            background-color: var(--form-bg);
             padding: 20px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
@@ -107,10 +131,10 @@
         button:hover { opacity: 0.9; }
 
         .btn-primary { background-color: var(--accent-secondary); color: #000; }
-        .btn-update { background-color: var(--accent-primary); color: #000; }
-        .btn-danger { background-color: var(--danger); color: #000; }
+        .btn-update { background-color: var(--accent-primary); color: var(--btn-text-on-primary); }
+        .btn-danger { background-color: var(--danger); color: var(--btn-text-on-primary); }
         .btn-edit { background-color: transparent; border: 1px solid var(--text-secondary); color: var(--text-primary); padding: 6px 12px; font-size: 0.9rem; }
-        .btn-edit:hover { background-color: rgba(255,255,255,0.1); }
+        .btn-edit:hover { background-color: var(--edit-hover); }
 
         /* Toolbar */
         .toolbar {
@@ -139,14 +163,14 @@
         }
 
         th {
-            background-color: #252525;
+            background-color: var(--th-bg);
             color: var(--text-secondary);
             font-weight: 600;
             text-transform: uppercase;
             font-size: 0.8rem;
         }
 
-        tr:hover { background-color: #2c2c2c; }
+        tr:hover { background-color: var(--hover-bg); }
 
         .col-checkbox { display: none; width: 40px; }
         .selection-mode-active .col-checkbox { display: table-cell; }
@@ -159,9 +183,20 @@
         }
         .tag-extra { color: var(--danger); background: rgba(207, 102, 121, 0.1); }
         .tag-comun { color: var(--accent-secondary); background: rgba(3, 218, 198, 0.1); }
+
+        #themeToggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
+<button id="themeToggle" title="Cambiar Tema">🌙</button>
 
 <div class="container">
     <h1>Gestor de Consorcios</h1>
@@ -214,6 +249,22 @@
 <script>
     const API_URL = '/api/gastos';
     let editandoId = null;
+
+    // Lógica Dark Mode
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    
+    if (localStorage.getItem('theme') === 'dark') {
+        body.classList.add('dark-mode');
+        themeToggle.textContent = '☀️';
+    }
+
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        const isDark = body.classList.contains('dark-mode');
+        themeToggle.textContent = isDark ? '☀️' : '🌙';
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
 
     document.addEventListener('DOMContentLoaded', listarGastos);
 
